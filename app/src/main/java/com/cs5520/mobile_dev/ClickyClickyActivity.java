@@ -49,7 +49,6 @@ public class ClickyClickyActivity extends AppCompatActivity {
     }
 
     public void onClick(View view) {
-        Log.e(TAG, "Button Pressed");
         if (view.getId() == R.id.buttonA) {
             Log.e(TAG, "Button A Pressed");
             data.setPressedButtonData(buttonA.getText().toString());
@@ -76,6 +75,5 @@ public class ClickyClickyActivity extends AppCompatActivity {
             displayTextView.setText(data.getPressedButtonData());
         }
     }
-
 
 }
