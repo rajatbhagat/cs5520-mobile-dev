@@ -6,4 +6,18 @@
     android:layout_height="match_parent"
     tools:context=".LinkCollectorActivity">
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="362dp"
+        android:layout_height="687dp"
+        tools:layout_editor_absoluteX="1dp"
+        tools:layout_editor_absoluteY="1dp" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floatingActionButton2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        app:srcCompat="@android:drawable/ic_input_add"
+        tools:layout_editor_absoluteX="278dp"
+        tools:layout_editor_absoluteY="558dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
