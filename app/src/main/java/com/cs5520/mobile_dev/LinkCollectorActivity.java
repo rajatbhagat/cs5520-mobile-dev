@@ -5,7 +5,10 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -26,7 +29,7 @@ public class LinkCollectorActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_link_collector);
 
-        urlDataList.add(new URLData("www.google.com"));
+        urlDataList.add(new URLData("https://www.google.com"));
         urlDataList.add(new URLData("www.google.com"));
         urlDataList.add(new URLData("www.google.com"));
         urlDataList.add(new URLData("www.google.com"));
@@ -70,5 +73,13 @@ public class LinkCollectorActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(urlAdapter);
+
+        recyclerView.addOnItemTouchListener(new RecyclerViewItemClickHelper(getApplicationContext(), new RecyclerViewItemClickHelper.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(urlDataList.get(position).getUrl()));
+                startActivity(intent);
+            }
+        }));
     }
 }
