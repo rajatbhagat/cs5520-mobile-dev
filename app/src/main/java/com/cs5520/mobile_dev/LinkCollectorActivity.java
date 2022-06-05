@@ -70,11 +70,13 @@ public class LinkCollectorActivity extends AppCompatActivity {
                 AlertDialog alertDialog = builder.create();
 
                 Button submitButton = dialogView.findViewById(R.id.dialog_submit_button);
-                EditText editText = dialogView.findViewById(R.id.url_edit_text);
+                EditText urlEditText = dialogView.findViewById(R.id.url_edit_text);
+                EditText urlNameEditText = dialogView.findViewById(R.id.url_name_edit_text);
                 submitButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        String url = editText.getText().toString();
+                        String url = urlEditText.getText().toString();
+                        String urlName = urlNameEditText.getText().toString();
                         String snackbarMessage = "";
                         String regexToValidateURL = "((http|https)://)(www.)?"
                                 + "[a-zA-Z0-9@:%._\\+~#?&//=]"
@@ -82,12 +84,16 @@ public class LinkCollectorActivity extends AppCompatActivity {
                                 + "{2,6}\\b([-a-zA-Z0-9@:%"
                                 + "._\\+~#?&//=]*)";
                         Pattern pattern = Pattern.compile(regexToValidateURL);
-                        if (pattern.matcher(url).matches()) {
-                            snackbarMessage = "URL Created Successfully.";
-                            urlDataList.add(new URLData(url, "Default"));
-                            urlAdapter.notifyItemInserted(urlDataList.size() - 1);
+                        if (urlName.equals("")) {
+                            snackbarMessage = "Error. Please add Name of the URL";
                         } else {
-                            snackbarMessage = "Error while creating URL. Please enter URL like : https://www.example.com";
+                            if (pattern.matcher(url).matches()) {
+                                snackbarMessage = "URL Created Successfully.";
+                                urlDataList.add(new URLData(url, urlName));
+                                urlAdapter.notifyItemInserted(urlDataList.size() - 1);
+                            } else {
+                                snackbarMessage = "Error. Please enter URL like : https://www.example.com";
+                            }
                         }
                         alertDialog.dismiss();
                         Snackbar.make(parentLayout, snackbarMessage, Snackbar.LENGTH_LONG)
