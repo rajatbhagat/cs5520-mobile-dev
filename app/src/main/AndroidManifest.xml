@@ -14,7 +14,7 @@
             android:exported="false" />
         <activity
             android:name=".LinkCollectorActivity"
-            android:exported="false" />
+            android:exported="false" android:configChanges="orientation|screenSize"/>
         <activity
             android:name=".ClickyClickyActivity"
             android:exported="false" />
