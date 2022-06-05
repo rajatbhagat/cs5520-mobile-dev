@@ -24,6 +24,7 @@ import com.google.android.material.snackbar.Snackbar;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class LinkCollectorActivity extends AppCompatActivity {
 
@@ -75,7 +76,13 @@ public class LinkCollectorActivity extends AppCompatActivity {
                     public void onClick(View v) {
                         String url = editText.getText().toString();
                         String snackbarMessage = "";
-                        if (android.util.Patterns.WEB_URL.matcher(url).matches()) {
+                        String regexToValidateURL = "((http|https)://)(www.)?"
+                                + "[a-zA-Z0-9@:%._\\+~#?&//=]"
+                                + "{2,256}\\.[a-z]"
+                                + "{2,6}\\b([-a-zA-Z0-9@:%"
+                                + "._\\+~#?&//=]*)";
+                        Pattern pattern = Pattern.compile(regexToValidateURL);
+                        if (pattern.matcher(url).matches()) {
                             snackbarMessage = "URL Created Successfully.";
                             urlDataList.add(new URLData(editText.getText().toString()));
                         } else {
