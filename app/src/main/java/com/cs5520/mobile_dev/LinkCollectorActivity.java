@@ -40,7 +40,7 @@ public class LinkCollectorActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_link_collector);
 
-        urlDataList.add(new URLData("https://www.google.com"));
+//        urlDataList.add(new URLData("https://www.google.com", "Default"));
 
         urlAdapter = new URLAdapter(getApplicationContext(), urlDataList);
         recyclerView = (RecyclerView) findViewById(R.id.link_collector_recycler_view);
@@ -84,7 +84,8 @@ public class LinkCollectorActivity extends AppCompatActivity {
                         Pattern pattern = Pattern.compile(regexToValidateURL);
                         if (pattern.matcher(url).matches()) {
                             snackbarMessage = "URL Created Successfully.";
-                            urlDataList.add(new URLData(editText.getText().toString()));
+                            urlDataList.add(new URLData(url, "Default"));
+                            urlAdapter.notifyItemInserted(urlDataList.size() - 1);
                         } else {
                             snackbarMessage = "Error while creating URL. Please enter URL like : https://www.example.com";
                         }
