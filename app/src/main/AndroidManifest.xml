@@ -10,11 +10,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Cs5520mobiledev">
         <activity
+            android:name=".FindPrimeActivity"
+            android:exported="false" />
+        <activity
             android:name=".AboutMeActivity"
             android:exported="false" />
         <activity
             android:name=".LinkCollectorActivity"
-            android:exported="false" android:configChanges="orientation|screenSize"/>
+            android:configChanges="orientation|screenSize"
+            android:exported="false" />
         <activity
             android:name=".ClickyClickyActivity"
             android:exported="false" />

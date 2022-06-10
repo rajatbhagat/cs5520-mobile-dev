@@ -65,6 +65,16 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        Button findPrimeButton = (Button) findViewById(R.id.find_prim_button);
+        findPrimeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this,
+                        FindPrimeActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
