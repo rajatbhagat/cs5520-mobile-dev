@@ -41,9 +41,8 @@ public class MainActivity extends AppCompatActivity {
         aboutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(),
-                        "Name: Rajat Manish Bhagat \n Email: bhagat.r@northeastern.edu",
-                        Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(MainActivity.this, AboutMeActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -53,6 +52,16 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this,
                         ClickyClickyActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        Button linkCollectorButton = (Button) findViewById(R.id.button_link_collector);
+        linkCollectorButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this,
+                        LinkCollectorActivity.class);
                 startActivity(intent);
             }
         });
