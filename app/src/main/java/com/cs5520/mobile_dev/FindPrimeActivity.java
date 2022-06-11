@@ -54,24 +54,25 @@ public class FindPrimeActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Do you want to terminate the search?");
-        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                finish();
-            }
-        });
-        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-        builder.setCancelable(false);
-        AlertDialog alert = builder.create();
-        alert.show();
+        if (endSearch) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("Do you want to terminate the search?");
+            builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    finish();
+                }
+            });
+            builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+            builder.setCancelable(false);
+            AlertDialog alert = builder.create();
+            alert.show();
+        }
     }
 
     private boolean isPrime(int num) {
@@ -84,7 +85,7 @@ public class FindPrimeActivity extends AppCompatActivity {
         if (num % 2 == 0) {
             return false;
         }
-        for (int i = 3; i <= Math.sqrt(num); i++) {
+        for (int i = 3; i <= Math.sqrt(num); i+=2) {
             if (num % i == 0) {
                 return false;
             }
