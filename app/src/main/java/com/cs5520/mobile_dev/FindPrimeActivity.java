@@ -11,4 +11,19 @@ public class FindPrimeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_find_prime);
     }
+
+    private boolean isPrime(int num) {
+        if (num == 0 || num == 1) {
+            return false;
+        } else {
+            int div = 2;
+            while ( div != num) {
+                if (num % div == 0) {
+                    return false;
+                }
+                div++;
+            }
+            return true;
+        }
+    }
 }
