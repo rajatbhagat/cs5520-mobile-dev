@@ -12,8 +12,10 @@
         android:layout_height="wrap_content"
         android:text="@string/about"
         app:layout_constraintBottom_toTopOf="@+id/button_clicky"
-        app:layout_constraintTop_toBottomOf="@+id/textview_first"
-        tools:layout_editor_absoluteX="149dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textview_first" />
 
     <TextView
         android:id="@+id/textview_first"
@@ -21,8 +23,10 @@
         android:layout_height="wrap_content"
         android:text="@string/hello_world"
         app:layout_constraintBottom_toTopOf="@+id/button_about"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="168dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/button_link_collector"
@@ -30,8 +34,10 @@
         android:layout_height="wrap_content"
         android:text="@string/link_collector"
         app:layout_constraintBottom_toTopOf="@+id/find_prim_button"
-        app:layout_constraintTop_toBottomOf="@+id/button_clicky"
-        tools:layout_editor_absoluteX="125dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_clicky" />
 
     <Button
         android:id="@+id/button_clicky"
@@ -39,8 +45,10 @@
         android:layout_height="wrap_content"
         android:text="@string/clicky"
         app:layout_constraintBottom_toTopOf="@+id/button_link_collector"
-        app:layout_constraintTop_toBottomOf="@+id/button_about"
-        tools:layout_editor_absoluteX="132dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_about" />
 
     <Button
         android:id="@+id/find_prim_button"
@@ -48,7 +56,9 @@
         android:layout_height="wrap_content"
         android:text="Find Primes"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_link_collector"
-        tools:layout_editor_absoluteX="140dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_link_collector" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
