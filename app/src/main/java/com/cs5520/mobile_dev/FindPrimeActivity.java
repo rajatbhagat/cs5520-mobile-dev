@@ -21,7 +21,7 @@ public class FindPrimeActivity extends AppCompatActivity {
     private Handler textHandler = new Handler();
     private Button findPrimeButton;
     private Button terminateSearchButton;
-    private boolean endSearch;
+    private boolean endSearch = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +54,7 @@ public class FindPrimeActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (endSearch) {
+        if (!endSearch) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage("Do you want to terminate the search?");
             builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
@@ -72,6 +72,9 @@ public class FindPrimeActivity extends AppCompatActivity {
             builder.setCancelable(false);
             AlertDialog alert = builder.create();
             alert.show();
+        }
+        else {
+            super.onBackPressed();
         }
     }
 
@@ -98,25 +101,19 @@ public class FindPrimeActivity extends AppCompatActivity {
         @Override
         public void run() {
             while (!endSearch) {
-                boolean ans = isPrime(originalNum);
-                if (ans) {
-                    textHandler.post(new Runnable() {
-                        @SuppressLint("SetTextI18n")
-                        @Override
-                        public void run() {
+                textHandler.post(new Runnable() {
+                    @SuppressLint("SetTextI18n")
+                    @Override
+                    public void run() {
+                        if (isPrime(originalNum)) {
                             latestPrimeTextView.setText(Integer.toString(originalNum));
-                        }
-                    });
-                }
-                originalNum++;
-                try {
-                    textHandler.post(new Runnable() {
-                        @SuppressLint("SetTextI18n")
-                        @Override
-                        public void run() {
+                        } else {
                             currentNumTextView.setText(Integer.toString(originalNum));
                         }
-                    });
+                    }
+                });
+                originalNum++;
+                try {
                     Thread.sleep(100);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
