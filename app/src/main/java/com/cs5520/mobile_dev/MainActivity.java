@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         Button locationActivityButton = (Button) findViewById(R.id.location_activity);
-        findPrimeButton.setOnClickListener(new View.OnClickListener() {
+        locationActivityButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this,
