@@ -10,8 +10,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Cs5520mobiledev">
         <activity
+            android:name=".LocationSensingActivity"
+            android:exported="false" />
+        <activity
             android:name=".FindPrimeActivity"
-            android:exported="false" android:screenOrientation="portrait" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".AboutMeActivity"
             android:exported="false" />
