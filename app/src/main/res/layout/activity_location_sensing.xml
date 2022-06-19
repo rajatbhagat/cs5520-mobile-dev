@@ -138,6 +138,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_weight="0.13"
             android:checked="false"
+            android:minHeight="48dp"
             android:text="Coarse Accuracy"
             android:textSize="25dp" />
     </RadioGroup>
