@@ -22,6 +22,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
 import android.provider.Settings;
+import android.view.View;
+import android.widget.Button;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,6 +45,9 @@ public class LocationSensingActivity extends AppCompatActivity {
     private TextView longitudeTextView;
     private TextView distanceTextView;
     private LocationRequest locationRequest;
+    private Location firstLocation;
+    private Location secondLocation;
+    private float distance = 0;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -56,7 +61,40 @@ public class LocationSensingActivity extends AppCompatActivity {
         distanceTextView = (TextView) findViewById(R.id.current_distance_text);
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+
+        RadioGroup radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                if(checkedId == R.id.high_acc_radio) {
+                    Toast.makeText(getApplicationContext(), "High location", Toast.LENGTH_SHORT).show();
+                    mFusedLocationClient = null;
+                    locationRequest = createLocationRequest(LocationRequest.PRIORITY_HIGH_ACCURACY);
+                    mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getApplicationContext());
+                    getInitialLocationData();
+                }
+
+                if(checkedId == R.id.coarse_Acc_Radio) {
+                    Toast.makeText(getApplicationContext(), "Low power location", Toast.LENGTH_SHORT).show();
+                    mFusedLocationClient = null;
+                    locationRequest = createLocationRequest(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+                    mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getApplicationContext());
+                    getInitialLocationData();
+                }
+            }
+        });
+
+        Button resetDistanceButton = (Button) findViewById(R.id.reset_distance_button);
+        resetDistanceButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                distance =0;
+                distanceTextView.setText("0");
+            }
+        });
+        locationRequest = createLocationRequest(LocationRequest.PRIORITY_HIGH_ACCURACY);
         getLocationData();
+
 
     }
 
@@ -104,6 +142,7 @@ public class LocationSensingActivity extends AppCompatActivity {
                             getInitialLocationData();
                         } else {
                             System.out.println("Found location data");
+                            firstLocation = location;
                             latitudeTextView.setText(String.valueOf(location.getLatitude()));
                             longitudeTextView.setText(String.valueOf(location.getLongitude()));
                             startLocationUpdates();
@@ -121,24 +160,22 @@ public class LocationSensingActivity extends AppCompatActivity {
     private LocationRequest createLocationRequest(int locationPriority) {
         locationRequest = new LocationRequest();
         locationRequest.setPriority(locationPriority);
-        locationRequest.setInterval(1000);
-        locationRequest.setFastestInterval(1000);
+        locationRequest.setInterval(100);
+        locationRequest.setFastestInterval(100);
         return locationRequest;
     }
 
     @SuppressLint("MissingPermission")
     private void getInitialLocationData() {
         System.out.println("Inital location update");
-        LocationRequest mLocationRequest = createLocationRequest(LocationRequest.PRIORITY_HIGH_ACCURACY);
-//        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
+        mFusedLocationClient.requestLocationUpdates(locationRequest, mLocationCallback, Looper.myLooper());
         startLocationUpdates();
     }
 
     @SuppressLint("MissingPermission")
     private void startLocationUpdates() {
         System.out.println("Starting location update");
-        mFusedLocationClient.requestLocationUpdates(createLocationRequest(LocationRequest.PRIORITY_HIGH_ACCURACY),
+        mFusedLocationClient.requestLocationUpdates(locationRequest,
                 mLocationCallback,
                 Looper.getMainLooper());
     }
@@ -148,6 +185,17 @@ public class LocationSensingActivity extends AppCompatActivity {
         @Override
         public void onLocationResult(LocationResult locationResult) {
             Location mLastLocation = locationResult.getLastLocation();
+            System.out.println(locationRequest.getPriority());
+            System.out.println("High " + String.valueOf(LocationRequest.PRIORITY_HIGH_ACCURACY));
+            System.out.println("Balance " + String.valueOf(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY));
+            if (firstLocation != null) {
+                float[] distanceArr = new float[1];
+                Location.distanceBetween(firstLocation.getLatitude(), firstLocation.getLongitude(), mLastLocation.getLatitude(), mLastLocation.getLongitude(), distanceArr);
+                distance += distanceArr[0];
+                distanceTextView.setText(String.valueOf(distance));
+            } else {
+                firstLocation = mLastLocation;
+            }
             latitudeTextView.setText(String.valueOf(mLastLocation.getLatitude()));
             longitudeTextView.setText(String.valueOf(mLastLocation.getLongitude()));
         }
@@ -164,13 +212,13 @@ public class LocationSensingActivity extends AppCompatActivity {
                         Manifest.permission.ACCESS_COARSE_LOCATION,false);
                 if (fineLocationGranted != null && fineLocationGranted) {
                     // Precise location access granted.
-                    Toast.makeText(getApplicationContext(), "Fine Granted", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Fine Location Access Granted", Toast.LENGTH_LONG).show();
                 } else if (coarseLocationGranted != null && coarseLocationGranted) {
                     // Only approximate location access granted.
-                    Toast.makeText(getApplicationContext(), "Coarse Granted", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Coarse Location Access Granted", Toast.LENGTH_LONG).show();
                 } else {
                     // No location access granted.
-                    Toast.makeText(getApplicationContext(), "Not granted", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Location Access Not granted", Toast.LENGTH_LONG).show();
                 }
             }
             );
