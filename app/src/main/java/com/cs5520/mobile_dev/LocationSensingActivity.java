@@ -21,7 +21,6 @@ import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
-import android.provider.Settings;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RadioGroup;
@@ -160,7 +159,7 @@ public class LocationSensingActivity extends AppCompatActivity {
                     }
                 });
             } else {
-                Toast.makeText(getApplicationContext(), "Please turn on your location", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Please turn on your location in the settings", Toast.LENGTH_LONG).show();
             }
 //        }
 //        else {
@@ -223,10 +222,10 @@ public class LocationSensingActivity extends AppCompatActivity {
                         Manifest.permission.ACCESS_COARSE_LOCATION,false);
                 if (fineLocationGranted != null && fineLocationGranted) {
                     // Precise location access granted.
-                    Toast.makeText(getApplicationContext(), "Fine Location Access Granted", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Precise Location Access Granted", Toast.LENGTH_LONG).show();
                 } else if (coarseLocationGranted != null && coarseLocationGranted) {
                     // Only approximate location access granted.
-                    Toast.makeText(getApplicationContext(), "Coarse Location Access Granted", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Approximate Location Access Granted", Toast.LENGTH_LONG).show();
                 } else {
                     // No location access granted.
                     Toast.makeText(getApplicationContext(), "Location Access Not granted", Toast.LENGTH_LONG).show();
