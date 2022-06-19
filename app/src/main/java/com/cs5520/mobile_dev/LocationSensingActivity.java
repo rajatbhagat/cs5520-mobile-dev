@@ -36,12 +36,13 @@ import com.google.android.gms.tasks.Task;
 
 import java.util.List;
 
-public class LocationSensingActivity extends AppCompatActivity implements LocationListener {
+public class LocationSensingActivity extends AppCompatActivity {
 
     private FusedLocationProviderClient mFusedLocationClient;
     private TextView latitudeTextView;
     private TextView longitudeTextView;
     private TextView distanceTextView;
+    private LocationRequest locationRequest;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -55,7 +56,6 @@ public class LocationSensingActivity extends AppCompatActivity implements Locati
         distanceTextView = (TextView) findViewById(R.id.current_distance_text);
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-
         getLocationData();
 
     }
@@ -71,17 +71,6 @@ public class LocationSensingActivity extends AppCompatActivity implements Locati
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
     }
 
-    @Override
-    public void onLocationChanged(@NonNull Location location) {
-        latitudeTextView.setText(location.getLatitude() + "");
-        longitudeTextView.setText(location.getLongitude() + "");
-    }
-
-    @Override
-    public void onLocationChanged(@NonNull List<Location> locations) {
-        LocationListener.super.onLocationChanged(locations);
-    }
-
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onResume() {
@@ -91,6 +80,15 @@ public class LocationSensingActivity extends AppCompatActivity implements Locati
         }
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        stopLocationUpdates();
+    }
+
+    private void stopLocationUpdates() {
+        mFusedLocationClient.removeLocationUpdates(mLocationCallback);
+    }
 
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -105,8 +103,10 @@ public class LocationSensingActivity extends AppCompatActivity implements Locati
                         if (location == null) {
                             getInitialLocationData();
                         } else {
-                            latitudeTextView.setText(location.getLatitude() + "");
-                            longitudeTextView.setText(location.getLongitude() + "");
+                            System.out.println("Found location data");
+                            latitudeTextView.setText(String.valueOf(location.getLatitude()));
+                            longitudeTextView.setText(String.valueOf(location.getLongitude()));
+                            startLocationUpdates();
                         }
                     }
                 });
@@ -118,25 +118,38 @@ public class LocationSensingActivity extends AppCompatActivity implements Locati
         }
     }
 
-    @SuppressLint("MissingPermission")
-    private void getInitialLocationData() {
-        LocationRequest mLocationRequest = new LocationRequest();
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        mLocationRequest.setInterval(5);
-        mLocationRequest.setFastestInterval(0);
-        mLocationRequest.setNumUpdates(1);
-
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
+    private LocationRequest createLocationRequest(int locationPriority) {
+        locationRequest = new LocationRequest();
+        locationRequest.setPriority(locationPriority);
+        locationRequest.setInterval(1000);
+        locationRequest.setFastestInterval(1000);
+        return locationRequest;
     }
 
-    private LocationCallback mLocationCallback = new LocationCallback() {
+    @SuppressLint("MissingPermission")
+    private void getInitialLocationData() {
+        System.out.println("Inital location update");
+        LocationRequest mLocationRequest = createLocationRequest(LocationRequest.PRIORITY_HIGH_ACCURACY);
+//        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
+        startLocationUpdates();
+    }
+
+    @SuppressLint("MissingPermission")
+    private void startLocationUpdates() {
+        System.out.println("Starting location update");
+        mFusedLocationClient.requestLocationUpdates(createLocationRequest(LocationRequest.PRIORITY_HIGH_ACCURACY),
+                mLocationCallback,
+                Looper.getMainLooper());
+    }
+
+    private final LocationCallback mLocationCallback = new LocationCallback() {
 
         @Override
         public void onLocationResult(LocationResult locationResult) {
             Location mLastLocation = locationResult.getLastLocation();
-            latitudeTextView.setText(mLastLocation.getLatitude() + "");
-            longitudeTextView.setText(mLastLocation.getLongitude() + "");
+            latitudeTextView.setText(String.valueOf(mLastLocation.getLatitude()));
+            longitudeTextView.setText(String.valueOf(mLastLocation.getLongitude()));
         }
     };
 
