@@ -127,8 +127,8 @@
             android:layout_width="wrap_content"
             android:layout_height="55dp"
             android:layout_gravity="center_horizontal"
-            android:checked="true"
-            android:text="High Accuracy"
+            android:checked="false"
+            android:text="High Accuracy location"
             android:textSize="25dp" />
 
         <RadioButton
@@ -137,9 +137,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_weight="0.13"
-            android:checked="false"
+            android:checked="true"
             android:minHeight="48dp"
-            android:text="Coarse Accuracy"
+            android:text="Low Accuracy location"
             android:textSize="25dp" />
     </RadioGroup>
 

@@ -67,19 +67,24 @@ public class LocationSensingActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 if(checkedId == R.id.high_acc_radio) {
-                    Toast.makeText(getApplicationContext(), "High location", Toast.LENGTH_SHORT).show();
+                    if (!isFineLocationPermissionGranted()) {
+                        ActivityCompat.requestPermissions(LocationSensingActivity.this,
+                                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                                99);
+                    }
                     mFusedLocationClient = null;
                     locationRequest = createLocationRequest(LocationRequest.PRIORITY_HIGH_ACCURACY);
                     mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getApplicationContext());
                     getInitialLocationData();
+
                 }
 
                 if(checkedId == R.id.coarse_Acc_Radio) {
-                    Toast.makeText(getApplicationContext(), "Low power location", Toast.LENGTH_SHORT).show();
                     mFusedLocationClient = null;
                     locationRequest = createLocationRequest(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
                     mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getApplicationContext());
                     getInitialLocationData();
+
                 }
             }
         });
@@ -92,16 +97,21 @@ public class LocationSensingActivity extends AppCompatActivity {
                 distanceTextView.setText("0");
             }
         });
-        locationRequest = createLocationRequest(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        getLocationData();
+
+        if (isApproxLocationPermissionGranted()) {
+            locationRequest = createLocationRequest(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+            getLocationData();
+        }
 
 
     }
 
-    private boolean isPermissionGranted() {
-        boolean isFinePermissionGranted = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
-        boolean isCoarsePermissionGranted = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
-        return isFinePermissionGranted && isCoarsePermissionGranted;
+    private boolean isApproxLocationPermissionGranted() {
+        return ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private boolean isFineLocationPermissionGranted() {
+        return ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
     }
 
     private boolean isGpsEnabled() {
@@ -113,7 +123,7 @@ public class LocationSensingActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-        if (isPermissionGranted()) {
+        if (isFineLocationPermissionGranted() || isApproxLocationPermissionGranted()) {
             getLocationData();
         }
     }
@@ -132,7 +142,7 @@ public class LocationSensingActivity extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.N)
     @SuppressLint("MissingPermission")
     private void getLocationData() {
-        if (isPermissionGranted()) {
+//        if (isPermissionGranted()) {
             if (isGpsEnabled()) {
                 mFusedLocationClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
                     @Override
@@ -152,13 +162,14 @@ public class LocationSensingActivity extends AppCompatActivity {
             } else {
                 Toast.makeText(getApplicationContext(), "Please turn on your location", Toast.LENGTH_LONG).show();
             }
-        } else {
-            requestPermissionForLocation();
-        }
+//        }
+//        else {
+//            requestPermissionForLocation();
+//        }
     }
 
     private LocationRequest createLocationRequest(int locationPriority) {
-        locationRequest = new LocationRequest();
+        locationRequest = LocationRequest.create();
         locationRequest.setPriority(locationPriority);
         locationRequest.setInterval(100);
         locationRequest.setFastestInterval(100);
@@ -223,18 +234,10 @@ public class LocationSensingActivity extends AppCompatActivity {
             }
             );
 
-        String fineLocationPermission = Manifest.permission.ACCESS_FINE_LOCATION;
-        String coarseLocationPermission = Manifest.permission.ACCESS_FINE_LOCATION;
-
-        int locationPermissionTest = getApplicationContext().checkCallingOrSelfPermission(fineLocationPermission);
-        int coarseLocationTest = getApplicationContext().checkCallingOrSelfPermission(coarseLocationPermission);
-
-        if (locationPermissionTest != PackageManager.PERMISSION_GRANTED
-                || coarseLocationTest !=  PackageManager.PERMISSION_GRANTED) {
             locationPermissionRequest.launch(new String[] {
                     Manifest.permission.ACCESS_FINE_LOCATION,
                     Manifest.permission.ACCESS_COARSE_LOCATION
             });
-        }
+
     }
 }
