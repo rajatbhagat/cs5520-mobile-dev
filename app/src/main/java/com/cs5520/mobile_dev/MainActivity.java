@@ -75,6 +75,16 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        Button locationActivityButton = (Button) findViewById(R.id.location_activity);
+        locationActivityButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this,
+                        LocationSensingActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override

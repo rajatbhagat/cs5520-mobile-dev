@@ -2,6 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.cs5520.mobile_dev">
 
+    <!-- Always include this permission -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+    <!-- Include only if your app benefits from precise location access. -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/custom_icon"
@@ -10,8 +16,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Cs5520mobiledev">
         <activity
+            android:name=".LocationSensingActivity"
+            android:exported="false"
+            android:configChanges="orientation|screenSize"/>
+        <activity
             android:name=".FindPrimeActivity"
-            android:exported="false" android:screenOrientation="portrait" />
+            android:exported="false"
+             />
         <activity
             android:name=".AboutMeActivity"
             android:exported="false" />
