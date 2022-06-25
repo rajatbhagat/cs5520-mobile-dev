@@ -85,6 +85,16 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        Button a7ActivityButton = (Button) findViewById(R.id.a7_activity);
+        a7ActivityButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this,
+                        ApiSearch.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
