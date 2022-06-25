@@ -7,8 +7,8 @@ public class AnimeData {
     private String animeName;
     private String animeSynopsis;
     private int animeScore;
-    private URL myAnimeUrl;
-    private URL animeImageURL;
+    private String myAnimeUrl;
+    private String animeImageURL;
     private String animeType;
     private String animeStatus;
 
@@ -40,19 +40,19 @@ public class AnimeData {
         this.animeScore = animeScore;
     }
 
-    public URL getMyAnimeUrl() {
+    public String getMyAnimeUrl() {
         return myAnimeUrl;
     }
 
-    public void setMyAnimeUrl(URL myAnimeUrl) {
+    public void setMyAnimeUrl(String myAnimeUrl) {
         this.myAnimeUrl = myAnimeUrl;
     }
 
-    public URL getAnimeImageURL() {
+    public String getAnimeImageURL() {
         return animeImageURL;
     }
 
-    public void setAnimeImageURL(URL animeImageURL) {
+    public void setAnimeImageURL(String animeImageURL) {
         this.animeImageURL = animeImageURL;
     }
 
