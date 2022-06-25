@@ -1,5 +1,6 @@
 package com.cs5520.mobile_dev;
 
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.view.View;
 import android.widget.ImageView;
@@ -10,6 +11,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.cs5520.mobile_dev.model.AnimeData;
 import com.cs5520.mobile_dev.model.URLData;
+import com.squareup.picasso.Picasso;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 public class AnimeSearchViewHolder extends RecyclerView.ViewHolder {
 
@@ -27,6 +33,10 @@ public class AnimeSearchViewHolder extends RecyclerView.ViewHolder {
     public void bindData(AnimeData anime) {
         animeTitleTextView.setText(anime.getAnimeName());
         animeTypeTextView.setText(anime.getAnimeType());
-//        animeImageView.setImageURI(Uri.parse(anime.getAnimeImageURL()));
+
+//            URL url = new URL();
+            Picasso.get().load(Uri.parse(anime.getAnimeImageURL())).into(animeImageView);
+//            animeImageView.setImageBitmap(BitmapFactory.decodeStream(url.openConnection().getInputStream()));
+
     }
 }

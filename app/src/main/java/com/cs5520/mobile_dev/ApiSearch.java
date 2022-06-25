@@ -122,6 +122,9 @@ public class ApiSearch extends AppCompatActivity {
                     data.setAnimeStatus(jsonObject.get("status").toString());
                     data.setAnimeType(jsonObject.get("type").toString());
                     data.setAnimeSynopsis(jsonObject.get("synopsis").toString());
+
+                    JSONObject imageObject = jsonObject.getJSONObject("images").getJSONObject("webp");
+                    data.setAnimeImageURL(imageObject.get("image_url").toString());
 //                    data.setYoutubeTrailerURL(jsonObject.getJSONObject("trailer"));
 //
                     animeDataList.add(data);
