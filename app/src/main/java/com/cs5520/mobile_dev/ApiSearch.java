@@ -3,6 +3,9 @@ package com.cs5520.mobile_dev;
 import static android.content.ContentValues.TAG;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
 import android.os.AsyncTask;
@@ -13,6 +16,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.cs5520.mobile_dev.model.AnimeData;
+import com.cs5520.mobile_dev.model.URLData;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -33,6 +37,9 @@ public class ApiSearch extends AppCompatActivity {
 
     private Button searchButton;
     private TextView displayTextView;
+    private RecyclerView recyclerView;
+    List<AnimeData> animeDataList = new ArrayList<>();
+    private AnimeSearchAdapter animeSearchAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +53,15 @@ public class ApiSearch extends AppCompatActivity {
                 callWebserviceButtonHandler(v);
             }
         });
+
+        animeSearchAdapter = new AnimeSearchAdapter(animeDataList, getApplicationContext());
+        recyclerView = (RecyclerView) findViewById(R.id.api_seaerch_recycler_view);
+
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(animeSearchAdapter);
+
 
 //        mURLEditText = (EditText)findViewById(R.id.URL_editText);
 //        mTitleTextView = (TextView)findViewById(R.id.result_textview);
@@ -81,12 +97,9 @@ public class ApiSearch extends AppCompatActivity {
              */
 
 
-//            String[] results = new String[2];
-            List<AnimeData> animeDataList = new ArrayList<>();
 
             URL url = null;
             try {
-
 //                url = new URL("https://api.jikan.moe/v4/anime?q=naruto&type=movie&start_date=2015");
                 url = new URL("https://api.jikan.moe/v4/anime?q=naruto");
 
@@ -112,6 +125,7 @@ public class ApiSearch extends AppCompatActivity {
 //                    data.setYoutubeTrailerURL(jsonObject.getJSONObject("trailer"));
 //
                     animeDataList.add(data);
+//                    animeSearchAdapter.notifyItemInserted(animeDataList.size() - 1);
 
                 }
                 return animeDataList;
@@ -137,8 +151,9 @@ public class ApiSearch extends AppCompatActivity {
         @Override
         protected void onPostExecute(List<AnimeData> animeData) {
             super.onPostExecute(animeData);
-            TextView result_view = (TextView)findViewById(R.id.result_text_view);
-            result_view.setText(animeData.toString() + "\n");
+            animeSearchAdapter.updateList(animeData);
+//            TextView result_view = (TextView)findViewById(R.id.result_text_view);
+//            result_view.setText(animeData.toString() + "\n");
         }
 
     }

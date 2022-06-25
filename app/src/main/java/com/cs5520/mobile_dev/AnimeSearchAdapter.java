@@ -14,7 +14,7 @@ import java.util.List;
 
 public class AnimeSearchAdapter extends RecyclerView.Adapter<AnimeSearchViewHolder>{
 
-    private final List<AnimeData> animeDataList;
+    private List<AnimeData> animeDataList;
     private final Context context;
 
     public AnimeSearchAdapter(List<AnimeData> animeDataList, Context context) {
@@ -36,5 +36,10 @@ public class AnimeSearchAdapter extends RecyclerView.Adapter<AnimeSearchViewHold
     @Override
     public int getItemCount() {
         return this.animeDataList.size();
+    }
+
+    public void updateList(List<AnimeData> dataList) {
+        this.animeDataList = dataList;
+        notifyDataSetChanged();
     }
 }

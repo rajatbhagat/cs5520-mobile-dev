@@ -27,6 +27,6 @@ public class AnimeSearchViewHolder extends RecyclerView.ViewHolder {
     public void bindData(AnimeData anime) {
         animeTitleTextView.setText(anime.getAnimeName());
         animeTypeTextView.setText(anime.getAnimeType());
-        animeImageView.setImageURI(Uri.parse(anime.getAnimeImageURL()));
+//        animeImageView.setImageURI(Uri.parse(anime.getAnimeImageURL()));
     }
 }
