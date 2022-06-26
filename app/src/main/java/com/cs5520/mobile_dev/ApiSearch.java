@@ -9,16 +9,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.cs5520.mobile_dev.model.AnimeData;
-import com.cs5520.mobile_dev.model.URLData;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -38,18 +37,21 @@ public class ApiSearch extends AppCompatActivity {
 
 
     private Button searchButton;
-    private TextView displayTextView;
+    private TextView animeNameTextView;
     private RecyclerView recyclerView;
-    List<AnimeData> animeDataList = new ArrayList<>();
+    private List<AnimeData> animeDataList = new ArrayList<>();
     private Handler listHandler = new Handler();
     private AnimeSearchAdapter animeSearchAdapter;
     private ProgressDialog dialog;
+    private RadioGroup animeTypeRadioGroup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_api_search);
         searchButton = (Button) findViewById(R.id.anime_search_button);
+        animeNameTextView = (TextView) findViewById(R.id.anime_name_search_text_view);
+
 
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,7 +59,9 @@ public class ApiSearch extends AppCompatActivity {
                  dialog = ProgressDialog.show(ApiSearch.this, "",
                         "Fetching Data...", true);
                 dialog.show();
-                callWebserviceButtonHandler(v);
+                ApiSearch.ChildThread childThread = new ApiSearch.ChildThread();
+                new Thread(childThread).start();
+
             }
         });
 
@@ -69,24 +73,9 @@ public class ApiSearch extends AppCompatActivity {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(animeSearchAdapter);
 
-
-//        mURLEditText = (EditText)findViewById(R.id.URL_editText);
-//        mTitleTextView = (TextView)findViewById(R.id.result_textview);
-
-    }
-
-    public void callWebserviceButtonHandler(View view){
-//        PingWebServiceTask task = new PingWebServiceTask();
-////         Insert search params in the execute
-//        task.execute(); // This is a security risk.  Don't let your user enter the URL in a real app.
-
-        ApiSearch.ChildThread childThread = new ApiSearch.ChildThread();
-        new Thread(childThread).start();
-
     }
 
     protected class ChildThread implements Runnable {
-        int originalNum = 2;
 
         @Override
         public void run() {
@@ -113,24 +102,20 @@ public class ApiSearch extends AppCompatActivity {
 
                 conn.connect();
 
-                // Read response.
                 InputStream inputStream = conn.getInputStream();
                 final String resp = convertStreamToString(inputStream);
                 JSONObject jObject = new JSONObject(resp);
-                JSONArray jsonArray = jObject.getJSONArray("data");    // Use this if your web service returns an array of objects.  Arrays are in [ ] brackets.
+                JSONArray jsonArray = jObject.getJSONArray("data");
                 for (int i = 0; i< jsonArray.length(); i++) {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
                     AnimeData data = new AnimeData();
                     data.setAnimeName(jsonObject.get("title").toString());
-//                    data.setAnimeScore(Integer.parseInt(jsonObject.get("score").toString()));
                     data.setAnimeStatus(jsonObject.get("status").toString());
                     data.setAnimeType(jsonObject.get("type").toString());
                     data.setAnimeSynopsis(jsonObject.get("synopsis").toString());
 
                     JSONObject imageObject = jsonObject.getJSONObject("images").getJSONObject("webp");
                     data.setAnimeImageURL(imageObject.get("image_url").toString());
-//                    data.setYoutubeTrailerURL(jsonObject.getJSONObject("trailer"));
-//
                     animeDataList.add(data);
                 }
 
@@ -158,14 +143,11 @@ public class ApiSearch extends AppCompatActivity {
                 Log.e(TAG,"JSONException");
                 e.printStackTrace();
             }
-
-//            return animeDataList;
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-//        }
         }
     }
 
