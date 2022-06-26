@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -42,6 +43,7 @@ public class ApiSearch extends AppCompatActivity {
     List<AnimeData> animeDataList = new ArrayList<>();
     private Handler listHandler = new Handler();
     private AnimeSearchAdapter animeSearchAdapter;
+    private ProgressDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +54,9 @@ public class ApiSearch extends AppCompatActivity {
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                 dialog = ProgressDialog.show(ApiSearch.this, "",
+                        "Fetching Data...", true);
+                dialog.show();
                 callWebserviceButtonHandler(v);
             }
         });
@@ -129,11 +134,14 @@ public class ApiSearch extends AppCompatActivity {
                     animeDataList.add(data);
                 }
 
+
+
                 listHandler.post(new Runnable() {
                     @SuppressLint("SetTextI18n")
                     @Override
                     public void run() {
                        animeSearchAdapter.updateList(animeDataList);
+                       dialog.dismiss();
                     }
                 });
 
@@ -159,92 +167,6 @@ public class ApiSearch extends AppCompatActivity {
             }
 //        }
         }
-    }
-
-    @SuppressLint("StaticFieldLeak")
-    private class PingWebServiceTask  extends AsyncTask<String, Integer, List<AnimeData>> {
-
-        @Override
-        protected void onProgressUpdate(Integer... values) {
-            Log.i(TAG, "Making progress...");
-        }
-
-        @Override
-        protected List<AnimeData> doInBackground(String... params) {
-
-            /**
-             * Sample URL to get data: https://api.jikan.moe/v4/anime?q=naruto&type=movie&start_date=2015
-             *
-             * Search params:
-             * name,
-             * type: tv, movie, special
-             * status: airing, complete, upcoming
-             * start_date: (only year)
-             */
-
-
-
-            URL url = null;
-            try {
-//                url = new URL("https://api.jikan.moe/v4/anime?q=naruto&type=movie&start_date=2015");
-                url = new URL("https://api.jikan.moe/v4/anime?q=naruto");
-
-                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                conn.setRequestMethod("GET");
-                conn.setDoInput(true);
-
-                conn.connect();
-
-                // Read response.
-                InputStream inputStream = conn.getInputStream();
-                final String resp = convertStreamToString(inputStream);
-                JSONObject jObject = new JSONObject(resp);
-                JSONArray jsonArray = jObject.getJSONArray("data");    // Use this if your web service returns an array of objects.  Arrays are in [ ] brackets.
-                for (int i = 0; i< jsonArray.length(); i++) {
-                    JSONObject jsonObject = jsonArray.getJSONObject(i);
-                    AnimeData data = new AnimeData();
-                    data.setAnimeName(jsonObject.get("title").toString());
-//                    data.setAnimeScore(Integer.parseInt(jsonObject.get("score").toString()));
-                    data.setAnimeStatus(jsonObject.get("status").toString());
-                    data.setAnimeType(jsonObject.get("type").toString());
-                    data.setAnimeSynopsis(jsonObject.get("synopsis").toString());
-
-                    JSONObject imageObject = jsonObject.getJSONObject("images").getJSONObject("webp");
-                    data.setAnimeImageURL(imageObject.get("image_url").toString());
-//                    data.setYoutubeTrailerURL(jsonObject.getJSONObject("trailer"));
-//
-                    animeDataList.add(data);
-//                    animeSearchAdapter.notifyItemInserted(animeDataList.size() - 1);
-
-                }
-                return animeDataList;
-
-
-            } catch (MalformedURLException e) {
-                Log.e(TAG,"MalformedURLException");
-                e.printStackTrace();
-            } catch (ProtocolException e) {
-                Log.e(TAG,"ProtocolException");
-                e.printStackTrace();
-            } catch (IOException e) {
-                Log.e(TAG,"IOException");
-                e.printStackTrace();
-            } catch (JSONException e) {
-                Log.e(TAG,"JSONException");
-                e.printStackTrace();
-            }
-
-            return animeDataList;
-        }
-
-        @Override
-        protected void onPostExecute(List<AnimeData> animeData) {
-            super.onPostExecute(animeData);
-            animeSearchAdapter.updateList(animeData);
-//            TextView result_view = (TextView)findViewById(R.id.result_text_view);
-//            result_view.setText(animeData.toString() + "\n");
-        }
-
     }
 
 
