@@ -48,6 +48,7 @@
                     android:id="@+id/tv_radio_button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:checked="true"
                     android:text="TV" />
 
@@ -55,12 +56,14 @@
                     android:id="@+id/movie_radio_button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:text="MOVIE" />
 
                 <RadioButton
                     android:id="@+id/special_radio_button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:text="SPECIAL" />
 
             </RadioGroup>

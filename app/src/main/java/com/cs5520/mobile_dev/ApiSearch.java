@@ -44,6 +44,8 @@ public class ApiSearch extends AppCompatActivity {
     private AnimeSearchAdapter animeSearchAdapter;
     private ProgressDialog dialog;
     private RadioGroup animeTypeRadioGroup;
+    private String searchType = "tv";
+    private String animeName = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +53,24 @@ public class ApiSearch extends AppCompatActivity {
         setContentView(R.layout.activity_api_search);
         searchButton = (Button) findViewById(R.id.anime_search_button);
         animeNameTextView = (TextView) findViewById(R.id.anime_name_search_text_view);
+        animeTypeRadioGroup = (RadioGroup) findViewById(R.id.type_radio_group);
+        animeTypeRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @SuppressLint("NonConstantResourceId")
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch (checkedId) {
+                    case R.id.tv_radio_button:
+                        searchType = "tv";
+                        break;
+                    case R.id.movie_radio_button:
+                        searchType = "movie";
+                        break;
+                    case R.id.special_radio_button:
+                        searchType = "special";
+                        break;
+                }
+            }
+        });
 
 
         searchButton.setOnClickListener(new View.OnClickListener() {
@@ -59,6 +79,7 @@ public class ApiSearch extends AppCompatActivity {
                  dialog = ProgressDialog.show(ApiSearch.this, "",
                         "Fetching Data...", true);
                 dialog.show();
+                animeName = animeNameTextView.getText().toString();
                 ApiSearch.ChildThread childThread = new ApiSearch.ChildThread();
                 new Thread(childThread).start();
 
@@ -94,7 +115,13 @@ public class ApiSearch extends AppCompatActivity {
             URL url = null;
             try {
 //                url = new URL("https://api.jikan.moe/v4/anime?q=naruto&type=movie&start_date=2015");
-                url = new URL("https://api.jikan.moe/v4/anime?q=naruto");
+                StringBuilder sb = new StringBuilder();
+                sb.append("https://api.jikan.moe/v4/anime?");
+                if (animeName != "") {
+                    sb.append("q=").append(animeName);
+                }
+                sb.append("&").append("type=").append(searchType);
+                url = new URL(sb.toString());
 
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("GET");
