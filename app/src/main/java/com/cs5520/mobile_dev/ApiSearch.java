@@ -14,6 +14,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
@@ -46,6 +47,10 @@ public class ApiSearch extends AppCompatActivity {
     private RadioGroup animeTypeRadioGroup;
     private String searchType = "tv";
     private String animeName = "";
+    private boolean isAiringChecked = false;
+    private boolean isFinishedChecked = false;
+    private CheckBox airingCheckbox;
+    private CheckBox finishedCheckbox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +59,8 @@ public class ApiSearch extends AppCompatActivity {
         searchButton = (Button) findViewById(R.id.anime_search_button);
         animeNameTextView = (TextView) findViewById(R.id.anime_name_search_text_view);
         animeTypeRadioGroup = (RadioGroup) findViewById(R.id.type_radio_group);
+        airingCheckbox = (CheckBox) findViewById(R.id.airing_checkbox);
+        finishedCheckbox = (CheckBox) findViewById(R.id.finished_checkbox);
         animeTypeRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @SuppressLint("NonConstantResourceId")
             @Override
@@ -76,9 +83,16 @@ public class ApiSearch extends AppCompatActivity {
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                animeDataList.clear();
                  dialog = ProgressDialog.show(ApiSearch.this, "",
                         "Fetching Data...", true);
                 dialog.show();
+                if (airingCheckbox.isChecked()) {
+                    isAiringChecked = true;
+                }
+                if (finishedCheckbox.isChecked()) {
+                    isFinishedChecked = true;
+                }
                 animeName = animeNameTextView.getText().toString();
                 ApiSearch.ChildThread childThread = new ApiSearch.ChildThread();
                 new Thread(childThread).start();
@@ -120,6 +134,19 @@ public class ApiSearch extends AppCompatActivity {
                 if (animeName != "") {
                     sb.append("q=").append(animeName);
                 }
+                if (isAiringChecked) {
+                    sb.append("&status=").append("airing");
+                    if (isFinishedChecked) {
+                        sb.append(",finished");
+                    }
+                }
+                else if (isFinishedChecked) {
+                    sb.append("&status=").append("finished");
+                    if (isAiringChecked) {
+                        sb.append(",airing");
+                    }
+                }
+
                 sb.append("&").append("type=").append(searchType);
                 url = new URL(sb.toString());
 
