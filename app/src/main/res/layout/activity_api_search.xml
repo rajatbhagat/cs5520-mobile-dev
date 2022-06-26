@@ -18,14 +18,18 @@
             android:id="@+id/anime_name_search_text_view"
             android:layout_width="match_parent"
             android:layout_height="42dp"
-            android:layout_marginTop="52dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="5dp"
             android:ems="10"
-            android:hint="Name of Show or Movie"
+            android:hint="Name of Anime TV Show or Movie"
             android:inputType="textPersonName" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
             android:orientation="horizontal">
 
             <TextView
@@ -34,7 +38,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Airing Status"
-                android:textSize="18sp"/>
+                android:textSize="18sp" />
 
             <CheckBox
                 android:id="@+id/airing_checkbox"
@@ -55,6 +59,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
             android:orientation="horizontal">
 
             <TextView
@@ -102,10 +108,12 @@
 
         <Button
             android:id="@+id/anime_search_button"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Search" />
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:text=" Search Anime" />
 
     </LinearLayout>
 
